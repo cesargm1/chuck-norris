@@ -59,7 +59,6 @@ function peticion({
 	const xhr = new XMLHttpRequest();
 	xhr.open(metodo, url);
 	xhr.responseType = tipo;
-	xhr.send();
 
 	// TODO Ej. 1: en load, si status es 2xx → alCargar(xhr.response, xhr).
 	// TODO Ej. 2: en load con otro status → alFallar(`La API no responde (código ${xhr.status})`).
@@ -72,7 +71,8 @@ function peticion({
 	xhr.onload = () => {
 		if (xhr.status < 300 && xhr.status > 199) {
 			if (xhr.response === null) {
-				return alFallar("Formato no valido");
+				 alFallar("Formato no valido");
+				 return
 			}
 			alCargar(xhr.response, xhr);
 		} else {
@@ -80,7 +80,8 @@ function peticion({
 		}
 	};
 	xhr.ontimeout = () => {
-		return alFallar(`Tiempo agotado ${xhr.timeout}`);
+		 alFallar(`Tiempo agotado ${xhr.timeout}`);
+		 return
 	};
 
 	xhr.onloadend = () => {
@@ -90,18 +91,57 @@ function peticion({
 	xhr.onerror = function () {
 		alFallar(`Error de red`);
 	};
-}
 
+	if(cuerpo !== undefined) {
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		xhr.send(JSON.stringify(cuerpo));
+	} else {
+		xhr.send();
+	}
+	}
+
+	// peticion({
+	// 	url: "https://jsonplaceholder.typicode.com/users",
+	// 	metodo: "GET",
+	// 	alCargar: (datos) => {
+	// 		console.log("DATOS RECIBIDOS:", datos);
+	// 	},
+	// 	alFallar: (error) => {
+	// 		console.error("ERROR:", error);
+	// 	},
+	// 	alTerminar: () => {
+	// 		console.log("PETICIÓN TERMINADA");
+	// 	}
+	// });
+	
 // ---------- Ejercicio 1 · Chiste aleatorio ----------
 function pedirChiste() {
 	// TODO: estado 'Cargando chiste…', botón deshabilitado mientras dura la petición.
+	pEstado.textContent = 'Cargando chiste…'
+	btnChiste.disabled = true
+	alTerminar = () => {
+		btnChiste.disabled = false
+	}
+	alTerminar()
 	// TODO Ej. 3: si hay categoría elegida, añade ?category=… a la URL.
+	if(selCategoria.value) {
+		let url = new URL(API);
+		url.searchParams.set('?category', API); 
+
+	}
 	// TODO: al cargar, mostrarChiste(dato.id, dato.value, 'api.chucknorris.io') y limpiar el estado.
+	alCargar = () => {
+		mostrarChiste(dato.id, dato.value, 'api.chucknorris.io')
+		pEstado.textContent = ""
+	}
 }
 
 // ---------- Ejercicio 3 · Categorías ----------
 function cargarCategorias() {
 	// TODO: GET `${API}/categories` y un <option> por categoría (createElement + textContent).
+	const xhr = new XMLHttpRequest();
+	xhr.open('GET', `${API}/categories`);
+	xhr.responseType = 'json';
 	// Si falla, la aplicación sigue funcionando con «Cualquiera».
 }
 
