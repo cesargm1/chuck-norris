@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UP5_A3 · Chistes de Chuck Norris</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<main>
+  <h1>Chistes de Chuck Norris</h1>
+  <p class="sub">UP5_A3 · Comunicación asíncrona con XMLHttpRequest. Ábrelo con Live Server.</p>
+
+  <section class="centro">
+    <img src="chuck.png" alt="Chuck Norris" width="160">
+    <div class="fila centrada">
+      <label for="categoria">Categoría</label>
+      <select id="categoria">
+        <option value="">Cualquiera</option>
+        <!-- Ejercicio 3: aquí van las categorías de la API -->
+      </select>
+      <button id="btn-chiste">Dame un chiste</button>
+      <button id="btn-casa" class="secundario">Chiste de la casa (XML)</button>
+    </div>
+
+    <p id="estado" class="estado" role="status"></p>
+    <blockquote id="chiste" class="chiste" hidden></blockquote>
+    <p id="origen" class="origen"></p>
+
+    <div class="fila centrada">
+      <label for="nota">Tu nota</label>
+      <select id="nota">
+        <option>5</option><option>4</option><option>3</option><option>2</option><option>1</option>
+      </select>
+      <button id="btn-valorar" disabled>Enviar valoración</button>
+    </div>
+    <p id="estado-valoracion" class="estado" role="status"></p>
+  </section>
+</main>
+</body>
+</html>

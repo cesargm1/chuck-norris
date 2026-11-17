@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chistes fuente="DWEC 2º DAW">
+  <chiste id="c1" categoria="dev">Chuck Norris no usa try/catch: los errores no se atreven a lanzarse.</chiste>
+  <chiste id="c2" categoria="dev">Chuck Norris hace peticiones síncronas y el navegador no se bloquea. Le espera.</chiste>
+  <chiste id="c3" categoria="red">Chuck Norris no recibe errores 404. Las páginas aparecen cuando él las pide.</chiste>
+  <chiste id="c4" categoria="red">Chuck Norris no necesita CORS: los servidores le dan permiso antes de que pregunte.</chiste>
+  <chiste id="c5" categoria="dev">Las promesas de Chuck Norris nunca quedan pendientes.</chiste>
+  <chiste id="c6" categoria="aula">Chuck Norris aprobó DWEC sin abrir la consola. La consola le abrió a él.</chiste>
+</chistes>
