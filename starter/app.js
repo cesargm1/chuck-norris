@@ -71,8 +71,8 @@ function peticion({
 	xhr.onload = () => {
 		if (xhr.status < 300 && xhr.status > 199) {
 			if (xhr.response === null) {
-				 alFallar("Formato no valido");
-				 return
+				alFallar("Formato no valido");
+				return;
 			}
 			alCargar(xhr.response, xhr);
 		} else {
@@ -80,8 +80,8 @@ function peticion({
 		}
 	};
 	xhr.ontimeout = () => {
-		 alFallar(`Tiempo agotado ${xhr.timeout}`);
-		 return
+		alFallar(`Tiempo agotado ${xhr.timeout}`);
+		return;
 	};
 
 	xhr.onloadend = () => {
@@ -92,56 +92,67 @@ function peticion({
 		alFallar(`Error de red`);
 	};
 
-	if(cuerpo !== undefined) {
-		xhr.setRequestHeader('Content-Type', 'application/json');
+	if (cuerpo !== undefined) {
+		xhr.setRequestHeader("Content-Type", "application/json");
 		xhr.send(JSON.stringify(cuerpo));
 	} else {
 		xhr.send();
 	}
-	}
+}
 
-	// peticion({
-	// 	url: "https://jsonplaceholder.typicode.com/users",
-	// 	metodo: "GET",
-	// 	alCargar: (datos) => {
-	// 		console.log("DATOS RECIBIDOS:", datos);
-	// 	},
-	// 	alFallar: (error) => {
-	// 		console.error("ERROR:", error);
-	// 	},
-	// 	alTerminar: () => {
-	// 		console.log("PETICIÓN TERMINADA");
-	// 	}
-	// });
-	
+// peticion({
+// 	url: "https://jsonplaceholder.typicode.com/users",
+// 	metodo: "GET",
+// 	alCargar: (datos) => {
+// 		console.log("DATOS RECIBIDOS:", datos);
+// 	},
+// 	alFallar: (error) => {
+// 		console.error("ERROR:", error);
+// 	},
+// 	alTerminar: () => {
+// 		console.log("PETICIÓN TERMINADA");
+// 	}
+// });
+
 // ---------- Ejercicio 1 · Chiste aleatorio ----------
 function pedirChiste() {
 	// TODO: estado 'Cargando chiste…', botón deshabilitado mientras dura la petición.
-	pEstado.textContent = 'Cargando chiste…'
-	btnChiste.disabled = true
-	alTerminar = () => {
-		btnChiste.disabled = false
-	}
-	alTerminar()
-	// TODO Ej. 3: si hay categoría elegida, añade ?category=… a la URL.
-	if(selCategoria.value) {
-		let url = new URL(API);
-		url.searchParams.set('?category', API); 
-
-	}
-	// TODO: al cargar, mostrarChiste(dato.id, dato.value, 'api.chucknorris.io') y limpiar el estado.
-	alCargar = () => {
-		mostrarChiste(dato.id, dato.value, 'api.chucknorris.io')
-		pEstado.textContent = ""
-	}
+	pEstado.textContent = "Cargando chiste…";
+	btnChiste.disabled = true;
+	peticion({
+		url: `${API}/random`,
+		alCargar: (dato) => {
+			mostrarChiste(dato.id, dato.value, "api.chucknorris.io");
+			pEstado.textContent = "";
+		},
+		alTerminar: () => {
+			btnChiste.disabled = false;
+		},
+		alFallar: (mensaje) => {
+			pEstado.textContent = mensaje;
+		},
+	});
 }
 
 // ---------- Ejercicio 3 · Categorías ----------
 function cargarCategorias() {
 	// TODO: GET `${API}/categories` y un <option> por categoría (createElement + textContent).
 	const xhr = new XMLHttpRequest();
-	xhr.open('GET', `${API}/categories`);
-	xhr.responseType = 'json';
+	xhr.open("GET", `${API}/categories`);
+	xhr.responseType = "json";
+
+	xhr.onload = () => {
+		const categorias = xhr.response;
+		console.log(categorias);
+		categorias.forEach((categoria) => {
+			const opcion = document.createElement("option");
+			opcion.textContent = categoria;
+			selCategoria.appendChild(opcion);
+		});
+	};
+
+	xhr.send();
+
 	// Si falla, la aplicación sigue funcionando con «Cualquiera».
 }
 
@@ -154,6 +165,24 @@ function pedirChisteDeLaCasa() {
 // ---------- Ejercicio 5 · Enviar datos: POST con JSON ----------
 function enviarValoracion() {
 	// TODO: POST a URL_VALORACIONES con { chisteId, nota, texto }.
+	let chisteId = chisteActual.id;
+	let nota = selNota.value;
+	let texto = chisteActual.texto;
+	peticion({
+		metodo: "POST",
+		url: URL_VALORACIONES,
+		tipo: "json",
+		cuerpo: { chisteId, nota, texto },
+		alCargar: (respuesta, xhr) => {
+			pEstadoValoracion.textContent = `Valoración n.º ${respuesta.id} guardada (código ${xhr.status})`;
+		},
+		alFallar: (mensaje) => {
+			pEstadoValoracion.textContent = mensaje;
+		},
+		alTerminar: () => {
+			btnValorar.disabled = false;
+		},
+	});
 	// TODO: muestra en #estado-valoracion «Valoración n.º <id> guardada (código 201)».
 }
 
